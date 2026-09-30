@@ -16,7 +16,7 @@ jobs:
         with: {node-version: 22}
       - run: npm install
       - name: Persist generated lockfile
-        if: ${{ github.event_name == 'push' && !hashFiles('package-lock.json') }}
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && !hashFiles('package-lock.json') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -24,7 +24,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore: add npm lockfile" || exit 0
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test

@@ -3,6 +3,9 @@ on:
   push:
     branches: ["main","bootstrap/**"]
   pull_request:
+permissions:
+  contents: write
+
 jobs:
   quality:
     runs-on: ubuntu-latest

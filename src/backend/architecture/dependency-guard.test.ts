@@ -57,7 +57,7 @@ function resolveImport(specifier:string,fromFile:string,root:string,mappings:Map
   for(const candidate of candidates){
     for(const extension of extensions){
       const path=candidate.endsWith(extension)?candidate:candidate+extension;
-      try{if(statSync(path).isFile()) return path;}catch{return null;}
+      try{if(statSync(path).isFile()) return path;}catch{ /* candidate may not exist */ }
     }
     for(const extension of extensions){
       const path=join(candidate,"index"+extension);

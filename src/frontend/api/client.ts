@@ -1,0 +1,2 @@
+export interface ApiClient{get<T>(path:string):Promise<T>;}
+export function createApiClient(baseUrl=""):ApiClient{return{async get<T>(path:string){const response=await fetch(`${baseUrl}${path}`,{headers:{Accept:"application/json"},credentials:"same-origin"});if(!response.ok)throw new Error(`API request failed: ${response.status}`);return response.json() as Promise<T>;}};}

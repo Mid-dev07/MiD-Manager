@@ -1,0 +1,1 @@
+import {describe,expect,it} from "vitest";import {getHealth} from "./get-health";describe("getHealth",()=>{it("returns readiness payload",()=>expect(getHealth("test")).toEqual({status:"ok",environment:"test"}));});

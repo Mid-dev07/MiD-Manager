@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+    branches: ["main","bootstrap/**"]
+  pull_request:
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm}
+      - run: npm install
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
+      - run: npx wrangler deploy --dry-run
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm install --global supabase@latest
+      - run: supabase --version
+      - run: supabase start
+      - run: supabase db reset
+      - run: supabase test db
+      - if: always()
+        run: supabase stop

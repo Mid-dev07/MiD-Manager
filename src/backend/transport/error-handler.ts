@@ -1,0 +1,3 @@
+import type {ErrorHandler} from "hono";
+import type {AppVariables} from "./middleware/context";
+export const errorHandler:ErrorHandler<{Variables:AppVariables}>=(error,c)=>{const requestId=c.get("requestContext")?.requestId??"unknown";console.error(JSON.stringify({level:"error",requestId,name:error.name,message:error.message}));return c.json({error:{code:"INTERNAL_ERROR",message:"Internal server error",requestId}},500);};

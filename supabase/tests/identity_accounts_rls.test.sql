@@ -1,0 +1,17 @@
+begin;
+select plan(10);
+insert into auth.users(id,email) values('11111111-1111-1111-1111-111111111111','owner@example.com'),('22222222-2222-2222-2222-222222222222','other@example.com');
+set local role anon;
+select throws_ok($$select * from public.identity_accounts$$,'42501',null,'anon cannot read identity accounts');
+select throws_ok($$insert into public.identity_accounts(user_id) values('11111111-1111-1111-1111-111111111111')$$,'42501',null,'anon cannot insert identity accounts');
+set local role authenticated;
+set local request.jwt.claim.sub='11111111-1111-1111-1111-111111111111';
+select results_eq($$insert into public.identity_accounts(user_id) values('11111111-1111-1111-1111-111111111111') returning user_id::text$$,array['11111111-1111-1111-1111-111111111111'],'owner can insert own identity');
+select results_eq($$select user_id::text from public.identity_accounts$$,array['11111111-1111-1111-1111-111111111111'],'owner sees own identity');
+select results_eq($$update public.identity_accounts set created_at=created_at where user_id='11111111-1111-1111-1111-111111111111' returning user_id::text$$,array['11111111-1111-1111-1111-111111111111'],'owner can update own identity');
+set local request.jwt.claim.sub='22222222-2222-2222-2222-222222222222';
+select is_empty($$select * from public.identity_accounts$$,'other user sees no identity');
+select throws_ok($$insert into public.identity_accounts(user_id) values('11111111-1111-1111-1111-111111111111')$$,'42501',null,'other user cannot insert for owner');
+select is_empty($$update public.identity_accounts set created_at=created_at returning user_id$$,'other user cannot update owner');
+select * from finish();
+rollback;

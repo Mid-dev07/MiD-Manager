@@ -1,0 +1,3 @@
+import type {OutboxPort} from "./outbox-port";
+export interface AsyncMessagePublisher{publish(message:unknown):Promise<void>;}
+export async function dispatchOutbox(outbox:OutboxPort,publisher:AsyncMessagePublisher,limit=20){const records=await outbox.claimBatch(limit);for(const record of records){try{await publisher.publish(record.event);await outbox.markDispatched(record.id);}catch(error){await outbox.markRetryableFailure(record.id,error instanceof Error?error.message:"unknown error");}}return records.length;}

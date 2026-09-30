@@ -1,0 +1,3 @@
+import type {DomainEvent} from "../core/domain-boundary";
+export interface OutboxRecord{id:string;event:DomainEvent;createdAt:string;dispatchedAt:string|null;attempts:number;}
+export interface OutboxPort{appendWithinTransaction(event:DomainEvent):Promise<OutboxRecord>;claimBatch(limit:number):Promise<OutboxRecord[]>;markDispatched(id:string):Promise<void>;markRetryableFailure(id:string,reason:string):Promise<void>;}

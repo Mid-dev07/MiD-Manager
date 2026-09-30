@@ -1,0 +1,5 @@
+import {createMiddleware,type MiddlewareHandler} from "hono/factory";
+import type {AuthenticatedIdentity,RequestContext} from "../../../shared/auth";
+import {authenticateRequest,type AuthGateway} from "../../application/auth/authenticate-request";
+export type AppVariables={requestContext:RequestContext};
+export function createRequestContextMiddleware(gateway:AuthGateway):MiddlewareHandler<{Variables:AppVariables}>{return createMiddleware(async(c,next)=>{const requestId=c.req.header("x-request-id")??crypto.randomUUID();const header=c.req.header("authorization");const token=header?.startsWith("Bearer ")?header.slice(7):null;const identity:AuthenticatedIdentity|null=await authenticateRequest(gateway,token);c.set("requestContext",{requestId,identity});c.header("x-request-id",requestId);await next();});}

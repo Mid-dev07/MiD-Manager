@@ -1,0 +1,16 @@
+create extension if not exists "pgcrypto";
+create table if not exists public.identity_accounts(user_id uuid primary key references auth.users(id) on delete cascade,created_at timestamptz not null default now());
+alter table public.identity_accounts enable row level security;
+revoke all on table public.identity_accounts from anon,authenticated;
+grant select,insert,update,delete on table public.identity_accounts to authenticated;
+create policy "identity_accounts_select_own" on public.identity_accounts for select to authenticated using ((select auth.uid())=user_id);
+create policy "identity_accounts_insert_own" on public.identity_accounts for insert to authenticated with check ((select auth.uid())=user_id);
+create policy "identity_accounts_update_own" on public.identity_accounts for update to authenticated using ((select auth.uid())=user_id) with check ((select auth.uid())=user_id);
+create policy "identity_accounts_delete_own" on public.identity_accounts for delete to authenticated using ((select auth.uid())=user_id);
+create index if not exists identity_accounts_user_id_idx on public.identity_accounts using btree(user_id);
+create schema if not exists private;
+create table if not exists private.outbox_messages(id uuid primary key default gen_random_uuid(),event_id uuid not null unique,event_type text not null,event_version integer not null check(event_version>0),aggregate_id uuid not null,occurred_at timestamptz not null,source text not null,owner_user_id uuid references auth.users(id) on delete set null,correlation_id uuid,idempotency_key text,payload jsonb not null,created_at timestamptz not null default now(),dispatched_at timestamptz,attempts integer not null default 0 check(attempts>=0),last_error text,next_attempt_at timestamptz);
+create unique index if not exists outbox_messages_idempotency_idx on private.outbox_messages(idempotency_key) where idempotency_key is not null;
+create index if not exists outbox_messages_dispatch_idx on private.outbox_messages(created_at) where dispatched_at is null;
+alter table private.outbox_messages enable row level security;
+revoke all on table private.outbox_messages from anon,authenticated;

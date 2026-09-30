@@ -1,5 +1,5 @@
 begin;
-select plan(10);
+select plan(8);
 insert into auth.users(id,email) values('11111111-1111-1111-1111-111111111111','owner@example.com'),('22222222-2222-2222-2222-222222222222','other@example.com');
 set local role anon;
 select throws_ok($$select * from public.identity_accounts$$,'42501',null,'anon cannot read identity accounts');

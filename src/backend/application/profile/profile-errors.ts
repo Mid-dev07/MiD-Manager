@@ -1,0 +1,1 @@
+export type ProfileApplicationErrorCode="UNAUTHENTICATED"|"PROFILE_NOT_FOUND"|"PROFILE_VALIDATION_ERROR"|"PROFILE_CONFLICT"|"PROFILE_PERSISTENCE_ERROR"; export class ProfileApplicationError extends Error{constructor(readonly code:ProfileApplicationErrorCode,message:string){super(message);this.name="ProfileApplicationError";}}

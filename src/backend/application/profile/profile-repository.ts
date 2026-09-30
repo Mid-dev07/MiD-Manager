@@ -1,0 +1,1 @@
+import type {Profile} from "../../domain/profile/profile"; export interface ProfileRepository{findByUserId(userId:string):Promise<Profile|null>;create(profile:Profile):Promise<Profile>;update(profile:Profile):Promise<Profile|null>;}

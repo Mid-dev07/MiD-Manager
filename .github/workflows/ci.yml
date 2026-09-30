@@ -1,11 +1,10 @@
 name: CI
 on:
   push:
-    branches: ["main","bootstrap/**"]
+    branches: ["main","bootstrap/**","feature/**"]
   pull_request:
 permissions:
   contents: read
-
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -96,5 +95,6 @@ jobs:
             sleep 1
           done
           WORKER_URL=http://127.0.0.1:8787 node scripts/verify-authenticated-auth.mjs
+          WORKER_URL=http://127.0.0.1:8787 node scripts/verify-profile-runtime.mjs
       - if: always()
         run: supabase stop

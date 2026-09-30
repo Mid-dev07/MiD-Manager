@@ -24,7 +24,7 @@ function findTsconfig(start:string):string|null{
   let current=resolve(start);
   while(true){
     const candidate=join(current,"tsconfig.json");
-    try{if(statSync(candidate).isFile()) return candidate;}catch{return null;}
+    try{if(statSync(candidate).isFile()) return candidate;}catch{ /* candidate may not exist */ }
     const parent=dirname(current);
     if(parent===current) return null;
     current=parent;
@@ -61,7 +61,7 @@ function resolveImport(specifier:string,fromFile:string,root:string,mappings:Map
     }
     for(const extension of extensions){
       const path=join(candidate,"index"+extension);
-      try{if(statSync(path).isFile()) return path;}catch{}
+      try{if(statSync(path).isFile()) return path;}catch{ /* candidate may not exist */ }
     }
   }
   return null;

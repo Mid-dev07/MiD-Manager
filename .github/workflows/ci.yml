@@ -16,7 +16,7 @@ jobs:
         with: {node-version: 22}
       - run: npm install
       - name: Persist generated lockfile
-        if: ${{ !hashFiles('package-lock.json') }}
+        if: ${{ github.event_name == 'push' && !hashFiles('package-lock.json') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

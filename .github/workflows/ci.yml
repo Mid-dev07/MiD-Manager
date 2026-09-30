@@ -68,11 +68,19 @@ jobs:
           set -a
           source /tmp/supabase.env
           set +a
+          SUPABASE_PUBLISHABLE_KEY="${PUBLISHABLE_KEY:-${ANON_KEY:-}}"
+          test -n "$API_URL"
+          test -n "$SUPABASE_PUBLISHABLE_KEY"
           {
             echo "SUPABASE_URL=$API_URL"
-            echo "SUPABASE_PUBLISHABLE_KEY=$ANON_KEY"
+            echo "SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY"
             echo "APP_ENV=test"
           } > .dev.vars
+          {
+            echo "SUPABASE_URL=$API_URL"
+            echo "SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY"
+            echo "APP_ENV=test"
+          } >> "$GITHUB_ENV"
       - run: npm run build
       - name: Start Worker and verify authenticated boundary
         run: |
@@ -80,6 +88,9 @@ jobs:
           npm run preview -- --host 127.0.0.1 --port 8787 > /tmp/mid-manager-auth-preview.log 2>&1 &
           pid=$!
           trap 'kill $pid 2>/dev/null || true; rm -f .dev.vars' EXIT
+          set -a
+          source .dev.vars
+          set +a
           for i in {1..45}; do
             if curl -fsS http://127.0.0.1:8787/api/health >/dev/null; then break; fi
             sleep 1

@@ -15,21 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: 22}
       - run: npm install --global npm@12.1.0
-      - run: npm install
-      - name: Persist generated lockfile
-        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if ! git ls-files --error-unmatch package-lock.json >/dev/null 2>&1; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add package-lock.json
-            git commit -m "chore: add npm lockfile"
-            git fetch origin "${{ github.event.pull_request.head.ref }}"
-          git rebase --onto "origin/${{ github.event.pull_request.head.ref }}" HEAD~1 HEAD
-          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
-          fi
+      - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test

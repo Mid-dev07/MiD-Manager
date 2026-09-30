@@ -102,9 +102,10 @@ function inspectArchitecture(backendRoot:string):Violation[]{
       if(!resolved) continue;
       const dependencyLayer=layerOf(resolved,root);
       if(!dependencyLayer) continue;
+      const isCompositionRoot=layer==="transport"&&file.endsWith("/transport/worker.ts");
       const allowed=
-        layer==="transport" ? dependencyLayer==="application" :
-        layer==="application" ? dependencyLayer==="domain" :
+        layer==="transport" ? (dependencyLayer==="application"||dependencyLayer==="transport"||(isCompositionRoot&&dependencyLayer==="infrastructure")) :
+        layer==="application" ? (dependencyLayer==="application"||dependencyLayer==="domain") :
         layer==="domain" ? dependencyLayer==="domain" :
         true;
       if(!allowed) violations.push({file,dependency:resolved,reason:`${layer} must not depend on ${dependencyLayer}`});

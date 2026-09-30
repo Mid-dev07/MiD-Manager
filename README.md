@@ -24,6 +24,8 @@ Copy `.env.example` to `.env`, install with `npm install`, then run `npm run dev
 
 ## Verification
 
+Bootstrap verification is CI-authoritative; local execution remains recommended when the required toolchain is available.
+
 `npm run typecheck`, `npm run lint`, `npm run test`, `npm run build`, `npx wrangler deploy --dry-run`, `supabase db reset`, and `supabase test db` are the bootstrap verification commands.
 
 Next milestone: **Auth → Profile → Dashboard Shell → Basic Daily Schedule**.

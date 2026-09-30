@@ -32,3 +32,6 @@ Next milestone: **Auth → Profile → Dashboard Shell → Basic Daily Schedule*
 
 See `docs/` for canonical product, architecture, security, AI, QA, and governance documents.
 Authenticated auth boundary verification is executed in CI against the local Supabase Auth stack.
+
+
+Authenticated auth boundary CI verification is part of the technical bootstrap gate.

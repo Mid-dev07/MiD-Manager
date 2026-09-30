@@ -2,7 +2,7 @@ import {describe,expect,it} from "vitest";
 import {mkdtempSync,rmSync,mkdirSync,writeFileSync,readFileSync,readdirSync,statSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {join,relative,resolve,dirname,extname} from "node:path";
-import ts from "typescript";
+import * as ts from "typescript";
 
 type Layer="transport"|"application"|"domain"|"infrastructure";
 type Violation={file:string;dependency:string;reason:string};

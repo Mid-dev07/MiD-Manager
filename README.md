@@ -2,9 +2,9 @@
 
 Personal self-management system built with a free-tier-first architecture.
 
-## Technical bootstrap
+## Technical foundation and first vertical slice
 
-This branch contains the executable foundation for the approved architecture:
+The repository contains the verified technical foundation plus the Profile Management vertical slice:
 
 - React + Vite frontend
 - Cloudflare Worker + Hono transport
@@ -15,20 +15,18 @@ This branch contains the executable foundation for the approved architecture:
 - structured request/error logging
 - Vitest unit and architecture tests
 - GitHub Actions CI
+- authenticated Profile read/update flow with PostgreSQL/RLS
 
-Feature implementation remains intentionally out of scope.
+Feature work remains intentionally bounded by vertical-slice scope and independent quality gates.
 
 ## Development
 
-Copy `.env.example` to `.env`, install with `npm install`, then run `npm run dev`.
+Copy .env.example to .env, install with npm install, then run npm run dev.
 
 ## Verification
 
-Bootstrap verification is CI-authoritative; local execution remains recommended when the required toolchain is available.
+CI is authoritative for the repository verification matrix. Core local commands are npm run typecheck, npm run lint, npm run test, npm run build, npx wrangler deploy --dry-run, supabase db reset, and supabase test db.
 
-`npm run typecheck`, `npm run lint`, `npm run test`, `npm run build`, `npx wrangler deploy --dry-run`, `supabase db reset`, and `supabase test db` are the bootstrap verification commands.
+Next milestone: Independent Profile Review, then Dashboard Shell and Basic Daily Schedule.
 
-Next milestone: **Auth → Profile → Dashboard Shell → Basic Daily Schedule**.
-
-See `docs/` for canonical product, architecture, security, AI, QA, and governance documents.
-Authenticated auth boundary verification is executed in CI against the local Supabase Auth stack.
+See docs/ for canonical product, architecture, security, AI, QA, and governance documents.

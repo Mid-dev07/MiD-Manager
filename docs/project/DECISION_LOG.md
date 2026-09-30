@@ -341,7 +341,7 @@ Separating intent, communication, and delivery isolates channel failures and mak
 - Native/platform alarm mechanisms remain replaceable implementation details.
 
 ### Scope / Boundaries
-Notification and reminder concepts remain within the documented Notification/Schedule boundaries; this ADR does not create a new Alarm domain or require a specific client platform.
+Ownership follows the existing domain model: Schedule owns `Reminder` and schedule-triggered reminder intent; Notification owns `ReminderRule`, `Notification`, `Delivery`, and `QuietHours`; Task retains `TaskReminder` as task-owned linkage. This ADR does not create a new Alarm domain or require a specific client platform.
 
 ## ADR-015 — Infrastructure Connection Strategy
 

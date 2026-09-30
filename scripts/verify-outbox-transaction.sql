@@ -50,6 +50,7 @@ end;
 $$;
 
 begin;
+\set ON_ERROR_STOP off
 select pg_temp.bootstrap_outbox_atomicity_probe(
   'cccccccc-cccc-cccc-cccc-cccccccccccc',
   'dddddddd-dddd-dddd-dddd-dddddddddddd',

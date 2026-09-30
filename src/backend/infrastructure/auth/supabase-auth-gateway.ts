@@ -1,0 +1,3 @@
+import {createClient} from "@supabase/supabase-js";
+import type {AuthGateway} from "../../application/auth/authenticate-request";
+export function createSupabaseAuthGateway(url:string,publishableKey:string):AuthGateway{return{async getIdentity(accessToken:string){const client=createClient(url,publishableKey,{global:{headers:{Authorization:`Bearer ${accessToken}`}},auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});const {data,error}=await client.auth.getUser(accessToken);if(error||!data.user)return null;return{userId:data.user.id,email:data.user.email??null};}};}

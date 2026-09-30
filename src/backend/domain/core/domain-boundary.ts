@@ -1,0 +1,2 @@
+export type DomainId=string;
+export interface DomainEvent<TPayload=unknown>{eventId:string;eventType:string;eventVersion:number;aggregateId:DomainId;occurredAt:string;source:string;ownerUserId:string|null;correlationId:string|null;idempotencyKey:string|null;payload:TPayload;}

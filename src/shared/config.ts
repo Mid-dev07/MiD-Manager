@@ -1,0 +1,3 @@
+export type AppEnvironment="development"|"test"|"production";
+export interface RuntimeConfig { appEnv:AppEnvironment; supabaseUrl:string; supabasePublishableKey:string; }
+export function parseRuntimeConfig(input:Record<string,string|undefined>):RuntimeConfig { const appEnv=input.APP_ENV??"development"; if(!["development","test","production"].includes(appEnv)) throw new Error("APP_ENV must be development, test, or production"); const supabaseUrl=input.SUPABASE_URL; const supabasePublishableKey=input.SUPABASE_PUBLISHABLE_KEY; if(!supabaseUrl) throw new Error("SUPABASE_URL is required"); if(!supabasePublishableKey) throw new Error("SUPABASE_PUBLISHABLE_KEY is required"); return {appEnv:appEnv as AppEnvironment,supabaseUrl,supabasePublishableKey}; }

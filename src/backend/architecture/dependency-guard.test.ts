@@ -1,0 +1,1 @@
+import {describe,expect,it} from "vitest";import {readFileSync} from "node:fs";describe("architecture guardrails",()=>{it("keeps domain free of infrastructure imports",()=>{const source=readFileSync("src/backend/domain/core/domain-boundary.ts","utf8");expect(source).not.toMatch(/cloudflare|supabase|hono/i);});});

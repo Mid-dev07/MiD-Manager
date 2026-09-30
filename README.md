@@ -2,24 +2,32 @@
 
 Personal self-management system built with a free-tier-first architecture.
 
-## Status
+## Technical bootstrap
 
-Project foundation stage. Application implementation has not started yet.
+This branch contains the executable foundation for the approved architecture:
 
-## Product
+- React + Vite frontend
+- Cloudflare Worker + Hono transport
+- application/domain/infrastructure boundaries
+- Supabase Auth boundary
+- versioned Supabase migrations and RLS foundation
+- outbox/queue/cron infrastructure contracts
+- structured request/error logging
+- Vitest unit and architecture tests
+- GitHub Actions CI
 
-MiD connects schedule, tasks, priorities, finance, health & activity, goals, habits, achievements, integrations, and optional AI intelligence in one user-controlled system.
+Feature implementation remains intentionally out of scope.
 
-## Engineering Principles
+## Development
 
-- Free-tier-first
-- Modular monolith first
-- Internal event architecture
-- Security and privacy by design
-- AI as an intelligence layer, not a source of truth
-- Core application remains useful when external services or AI are unavailable
-- Independent QA and security gates
+Copy `.env.example` to `.env`, install with `npm install`, then run `npm run dev`.
 
-## Repository Governance
+## Verification
 
-See `docs/` for the product, architecture, design, AI, security, QA, and project governance documents.
+Bootstrap verification is CI-authoritative; local execution remains recommended when the required toolchain is available.
+
+`npm run typecheck`, `npm run lint`, `npm run test`, `npm run build`, `npx wrangler deploy --dry-run`, `supabase db reset`, and `supabase test db` are the bootstrap verification commands.
+
+Next milestone: **Auth → Profile → Dashboard Shell → Basic Daily Schedule**.
+
+See `docs/` for canonical product, architecture, security, AI, QA, and governance documents.

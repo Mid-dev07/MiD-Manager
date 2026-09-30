@@ -1,0 +1,53 @@
+name: CI
+on:
+  push:
+    branches: ["main","bootstrap/**"]
+  pull_request:
+permissions:
+  contents: write
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm install --global npm@12.1.0
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
+      - run: npx wrangler deploy --dry-run
+      - name: Runtime smoke
+        run: |
+          set -euo pipefail
+          npm run preview -- --host 127.0.0.1 --port 8787 > /tmp/mid-manager-preview.log 2>&1 &
+          pid=$!
+          trap 'kill $pid 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8787/ >/tmp/mid-manager-root.html; then break; fi
+            sleep 1
+          done
+          test -s /tmp/mid-manager-root.html
+          curl -fsS http://127.0.0.1:8787/api/health >/tmp/mid-manager-health.json
+          grep -q '"status":"ok"' /tmp/mid-manager-health.json
+          status=$(curl -sS -o /tmp/mid-manager-auth.json -w '%{http_code}' http://127.0.0.1:8787/api/auth/context)
+          test "$status" = "401"
+          grep -q 'UNAUTHENTICATED' /tmp/mid-manager-auth.json
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: npm install --global supabase@latest
+      - run: supabase --version
+      - run: supabase start
+      - run: supabase db reset
+      - run: supabase test db
+      - if: always()
+        run: supabase stop

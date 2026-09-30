@@ -1,4 +1,5 @@
-import {createMiddleware,type MiddlewareHandler} from "hono/factory";
+import {createMiddleware} from "hono/factory";
+import type {MiddlewareHandler} from "hono";
 import type {AuthenticatedIdentity,RequestContext} from "../../../shared/auth";
 import {authenticateRequest,type AuthGateway} from "../../application/auth/authenticate-request";
 export type AppVariables={requestContext:RequestContext};
